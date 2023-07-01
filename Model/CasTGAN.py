@@ -374,8 +374,8 @@ class Discriminator(nn.Module):
         return torch.cat(data_t, dim=1)
         
 
-# TODO: define NestGAN
-class NestGAN(nn.Module):
+# TODO: define CasTGAN
+class CasTGAN(nn.Module):
     """
         Args:
             noise_dim (int):
@@ -427,7 +427,7 @@ class NestGAN(nn.Module):
                 verbose=True,
                 random_seed = None,
                 cuda=True):
-        super(NestGAN, self).__init__()
+        super(CasTGAN, self).__init__()
 
         assert batch_size % 2 == 0
 
@@ -471,7 +471,7 @@ class NestGAN(nn.Module):
     
     def train_auxs(self, aux_data = None, col_info = None):
 
-        print("Training auxiliary classifiers.")
+        print("Training auxiliary learners.")
 
         ac_models = []
 
@@ -528,7 +528,7 @@ class NestGAN(nn.Module):
 
             callers = [lgb.callback.early_stopping(stopping_rounds =  10, verbose =  False)]
 
-            print("Training AC {} out of {}".format(str(idx+1), str(len(col_info))))
+            print("Training AL {} out of {}".format(str(idx+1), str(len(col_info))))
             aux_model = lgb.train(lgb_params, train_data, num_boost_round=num_iters, valid_sets=val_data, callbacks = callers)
             aux_model.save_model("{}ac_{}.txt".format(self._path_aux,str(idx+1)))
             ac_models.append(aux_model)
@@ -997,7 +997,7 @@ class NestGAN(nn.Module):
         plt.ylabel("Loss")
         plt.ylim([-2.5, 2.5])
         plt.legend(['Generator', "Auxiliary (final layer)", "Discriminator", "Wasserstein (D)", "Gradient Penalty (D)"])
-        plt.title("NestGAN Losses")
+        plt.title("CasTGAN Losses")
         plt.show()
 
 

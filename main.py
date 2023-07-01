@@ -7,7 +7,9 @@ import os
 import time
 import numpy as np
 import yaml
+import pathlib
 from collections import namedtuple
+
 from Model.CasTGAN import CasTGAN
 
 ## TODO: add reproduce_paper boolean argument to specify seed for dataset if reproducability behaviour desired
@@ -34,7 +36,7 @@ parser.add_argument(
 parser.add_argument(
     "--data_path",
     type=str,
-    default="Clean_Datasets/",
+    default="Data/",
     help="Directory of data files",
 )
 
@@ -64,7 +66,7 @@ parser.add_argument(
     "--epochs",
     type=int,
     default=300,
-    help="number of epochs to train",
+    help="number of training epochs",
 )
 
 parser.add_argument(
@@ -391,7 +393,10 @@ end_gen = time.time()
 
 timestr = time.strftime("%Y%m%d-%H%M")
 
-fake_data_name = args.save_fake_data_path  + args.aux_fit_mode + "/" + args.dataset + "_fake_" + timestr + ".csv"
+save_FP = args.save_fake_data_path  + args.aux_fit_mode
+pathlib.Path(save_FP).mkdir(parents=True, exist_ok=True)
+
+fake_data_name = save_FP + "/" + args.dataset + "_fake_" + timestr + ".csv"
 
 fake_df.to_csv(fake_data_name, index = False)
 
